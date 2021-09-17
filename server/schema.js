@@ -98,6 +98,29 @@ const RootMutation = new GraphQLObjectType({
       resolve(parent, args) {
         return ProductModel.create(args);
       }
+    },
+    deleteProduct: {
+      type: Product,
+      args: {
+        _id: {type: new GraphQLNonNull(GraphQLString) }
+      },
+      resolve(parent, args) {
+        return ProductModel.deleteOne(args);
+      }
+    },
+    updateProduct: {
+      type: Product,
+      args: {
+        _id: {type: new GraphQLNonNull(GraphQLString) },
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        category: {type: new GraphQLNonNull(GraphQLString) }
+      },
+      resolve(parent, args) {
+        const {name, category, _id} = args;
+        const whereStr = {_id: _id};  // 查询条件
+        const updateStr = {$set: {name, category}};
+        return ProductModel.updateOne(whereStr, updateStr);
+      }
     }
   }
 });
